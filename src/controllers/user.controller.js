@@ -4,6 +4,7 @@ import {User} from "../models/user.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshTokens = async(userId) =>{
    try {
@@ -164,8 +165,8 @@ const logoutUser = asyncHandler(async(req,res) => {
    await User.findByIdAndUpdate(
       req.user._id,
       {
-         $set:{
-            refreshToken: undefined
+         $unset:{
+            refreshToken: 1
          }
          
       },
@@ -191,7 +192,7 @@ const logoutUser = asyncHandler(async(req,res) => {
 
 const refreshAccessToken = asyncHandler(async (req,res)=>{
    const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
-
+   // console.log(incomingRefreshToken)
    if(!incomingRefreshToken){
       throw new ApiError(401,"unauthorized request")
    }
@@ -202,7 +203,7 @@ try {
          process.env.REFRESH_TOKEN_SECRET
       )
    
-      const user = await user.findById(decodedToken?._id)
+      const user = await User.findById(decodedToken?._id)
    
       if(!user){
          throw new ApiError(401,"Invalid refresh token")
@@ -466,7 +467,7 @@ const getWatchHistory = asyncHandler(async(req,res)=>{
    return res
    .status(200)
    .json(
-      new ApiResponse(200,uaer[0].watchHistory,"watch history fetched successfully")
+      new ApiResponse(200,user[0].watchHistory,"watch history fetched successfully")
    )
 })
 
