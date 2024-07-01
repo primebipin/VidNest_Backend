@@ -9,8 +9,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
     const { page = 1, limit = 10 } = req.query;
 
-    const video = await Video.findById(videoId);
-
+    const video = await Video.findById(videoId)
     if (!video) {
         throw new ApiError(404, "Video not found");
     }
@@ -18,7 +17,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     const commentsAggregate = Comment.aggregate([
         {
             $match: {
-                video: new mongoose.Types.ObjectId(videoId)
+                video: new mongoose.Schema.Types.ObjectId(videoId)
             }
         },
         {
