@@ -17,7 +17,7 @@ const getVideoComments = asyncHandler(async (req, res) => {
     const commentsAggregate = Comment.aggregate([
         {
             $match: {
-                video: new mongoose.Schema.Types.ObjectId(videoId)
+                video: new mongoose.Types.ObjectId(videoId)
             }
         },
         {
@@ -88,11 +88,11 @@ const getVideoComments = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, comments, "Comments fetched successfully"));
 });
 
-const addComment = asyncHandler(async (req, res) => {
+const createAComment = asyncHandler(async (req, res) => {
     // TODO: add a comment to a video
     const { content } = req.body
     const { videoId } = req.params
-
+    // console.log(videoId)
     if(!content){
         throw new ApiError(400, "Comment is required")
     }
@@ -202,7 +202,7 @@ const deleteComment = asyncHandler(async (req, res) => {
 
 export {
     getVideoComments, 
-    addComment, 
+    createAComment, 
     updateComment,
      deleteComment
     }

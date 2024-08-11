@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-    addComment,
+    createAComment,
     deleteComment,
     getVideoComments,
     updateComment,
@@ -11,7 +11,7 @@ const router = Router();
 
 router.use(verifyJWT); 
 
-router.route("/:videoId").get(getVideoComments).post(addComment);
+router.route("/:videoId").get(getVideoComments).post(createAComment);
 router.route("/c/:commentId").delete(deleteComment).patch(updateComment);
 
 export default router
